@@ -1,6 +1,5 @@
 # Morpho Blue V1: Slither Static Analysis
 
-
 ## Background
 
 Morpho Blue is a singleton lending protocol. Unlike Compound or Aave, there's no governance-controlled risk parameter; market creators set their own oracle, LTV, and liquidation incentive at deployment time. This makes the codebase unusually lean (~676 SLOC across 20 contracts), which is part of why I chose it to practice static analysis.
