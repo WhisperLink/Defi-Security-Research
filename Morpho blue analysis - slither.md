@@ -1,6 +1,5 @@
 # Morpho Blue V1: Slither Static Analysis
 
----
 
 ## Background
 
