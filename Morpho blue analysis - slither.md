@@ -26,22 +26,20 @@ Slither needs the compiled artifacts, so I ran a `forge build` first before poin
 ### 1. Full detector sweep
 
 ```bash
-slither src/Morpho.sol --detect all 2>&1 | tee slither-all.txt
+slither src/Morpho.sol --detect all
 ```
 
 This is always my starting point. The output is noisy but gives a complete picture before I start filtering.
 
+![alt text](image.png)
+
 **Summary output:**
 
 ```
-Morpho.sol analyzed (20 contracts with 87 detectors)
-- High   : 0
-- Medium : 13
-- Low    : 11
-- Informational : 14
+INFO:Slither:src/Morpho.sol analyzed (20 contracts with 101 detectors), 38 result(s) found
 ```
 
-High being zero on a live production contract is expected but still worth confirming manually rather than trusting blindly.
+38 results across all severity levels. Broken down below.
 
 ### 2. Function visibility
 
@@ -49,7 +47,15 @@ High being zero on a live production contract is expected but still worth confir
 slither src/Morpho.sol --print function-summary
 ```
 
-I wanted to map which functions are external vs. public vs. internal before digging into the medium findings. Morpho's main entry points (`supply`, `withdraw`, `borrow`, `repay`, `liquidate`, `flashLoan`) are all `external`, which is correct. No unexpected public functions.
+Mapping which functions are external vs. public vs. internal before digging into findings. A few things stood out from the actual output.
+
+All user-facing entry points are external (not public): supply, withdraw, borrow, repay, supplyCollateral, withdrawCollateral, liquidate, flashLoan, accrueInterest. No unexpected public functions on the main contract.
+
+The 5 admin functions (setOwner, enableIrm, enableLltv, setFee, setFeeRecipient) all go through the onlyOwner modifier. _accrueInterest and _isHealthy are internal, called by the relevant external functions.
+
+One observation worth noting: supplyCollateral does not call _accrueInterest, unlike supply, withdraw, borrow, repay, and withdrawCollateral. This makes sense structurally since supplying collateral doesn't affect the interest-bearing pool, but it means the market's interest state isn't updated on collateral deposits. Not a bug, just a design choice worth being aware of.
+
+liquidate has the highest cyclomatic complexity (4) among all functions, reflecting the conditional bad debt handling logic. The other state-changing functions sit at 1-3. extSloads and the view-only getters are at 2 (Slither's baseline for functions with return values).
 
 ### 3. Data dependency
 
