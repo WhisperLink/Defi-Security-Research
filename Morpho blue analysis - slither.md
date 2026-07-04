@@ -71,6 +71,8 @@ This traces which state variables feed into which computations. Useful for spott
 slither src/Morpho.sol --print call-graph
 ```
 
+![alt text](image-2.png)
+
 Generated `morpho.call-graph.dot`. Morpho's callback pattern (external contracts called mid-execution during flash loans and liquidations) shows up clearly here. This is the main reentrancy surface.
 
 ### 5. External-function detector
