@@ -18,9 +18,7 @@ Both legs ultimately depended on lending markets (Morpho, Euler, Silo) that acce
 
 ## Attack Flow
 
-![Stream Finance recursive-looping flow](stream-flow.png)
-
-> Save the flow diagram as `stream-flow.png` next to this file so the image renders inline.
+![Stream Finance recursive-looping flow](Stream-Finance-issue-flowchart.png)
 
 The numbered path in the diagram is the leverage loop, not a single exploit transaction:
 
