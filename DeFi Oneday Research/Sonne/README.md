@@ -53,9 +53,9 @@ The reproduction, all against real contracts:
 
 - Confirms `soVELO.totalSupply = 0` (empty market), then executes the queued governance proposals that make the market live.
 - Flash-loans 35,469,150 VELO from the **real Velodrome pool**, mints ~2 wei of soVELO, and **donates** the VELO directly to soVELO.
-- Reads the **real exchange rate exploding from `2e26` to `1.77e43`**, borrows against ~2 wei of collateral, redeems the donation, and repays the loan.
+- Reads the **real exchange rate exploding from `2e26` to `1.77e43`**, borrows USDC against ~2 wei of collateral, redeems the donation, and repays the loan.
 
-Result of the reproduced transaction: **$724,290 USDC** extracted in a single transaction (one of two attack transactions that summed to ~$20M). Test: [`sonne-poc/test/SonneDonation.t.sol`](sonne-poc/test/SonneDonation.t.sol).
+Result of the reproduction: **$724,290 USDC** extracted from the `soUSDC` market in a single transaction. This is the borrow leg against one market; the real attacker repeated the same donation trick across Sonne's markets, in two transactions, to reach the ~$20M total. Test: [`sonne-poc/test/SonneDonation.t.sol`](sonne-poc/test/SonneDonation.t.sol).
 
 ## Patch / Remediation
 
